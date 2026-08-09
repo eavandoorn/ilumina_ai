@@ -1,0 +1,22 @@
+[project]
+name = "ilumina-ai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "celery>=5.6.3",
+    "cookiecutter>=2.7.1",
+    "crewai>=1.15.13",
+    "django>=6.1",
+    "django-tailwind>=4.5.0",
+    "fastapi>=0.141.1",
+    "pillow>=12.3.0",
+    "psycopg>=3.3.4",
+    "pydantic>=2.12.5",
+    "pytest-playwright>=0.8.0",
+    "python-dotenv>=1.2.2",
+    "uvicorn>=0.52.1",
+    "weaviate>=0.1.2",
+    "weaviate-client[agents]>=4.22.0",
+]

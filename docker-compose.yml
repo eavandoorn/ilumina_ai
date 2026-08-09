@@ -1,0 +1,18 @@
+services:
+  sandbox:
+    image: python:3.11-slim
+    container_name: code_sandbox
+    volumes:
+      - ./workspace:/app
+    working_dir: /app
+    # Use a non-root user for security
+    user: "1000:1000" 
+    # Limit resources to prevent the agent from crashing your host machine
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    # Standard ports aren't strictly needed for a sandbox unless it hosts a web server
+    ports:
+      - "8080:8080"
