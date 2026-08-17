@@ -3,7 +3,7 @@ name = "ilumina-ai"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "celery>=5.6.3",
     "cookiecutter>=2.7.1",
@@ -11,6 +11,8 @@ dependencies = [
     "django>=6.1",
     "django-tailwind>=4.5.0",
     "fastapi>=0.141.1",
+    "langchain-community>=0.4.2",
+    "langchain-ollama>=1.1.0",
     "pillow>=12.3.0",
     "psycopg>=3.3.4",
     "pydantic>=2.12.5",

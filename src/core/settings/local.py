@@ -16,7 +16,7 @@ from os.path import join
 from .base import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -82,11 +82,11 @@ DATABASES = {
             "service": "artprints",
             "passfile": ".my_pgpass",
         },
-        "NAME": "ilumina",
-        "USER": "eps",
-        "PASSWORD": getenv('DB_PASSWORD_USR_EPS'),
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": getenv('DB_NAM_SANDBOX',"ilumina"),
+        "USER": getenv('DB_USER_SANDBOX',"storesys"),
+        "PASSWORD": getenv('DB_PASSWORD_USR_EPS', 'password'),
+        "HOST": getenv('' ,'127.0.0.1'),
+        "PORT": getenv('DB_PORT',"5432"),
     }
 }
 

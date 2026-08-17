@@ -1,18 +1,41 @@
 services:
-  sandbox:
-    image: python:3.11-slim
-    container_name: code_sandbox
+  db:
+    image: postgres:15-alpine
+    container_name: code_sandbox_db
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-ilumina_db}
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
     volumes:
-      - ./workspace:/app
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  sandbox:
+    build: .
+    container_name: code_sandbox
+    depends_on:
+      db:
+        condition: service_started
+    volumes:
+      - ./src:/app
     working_dir: /app
-    # Use a non-root user for security
-    user: "1000:1000" 
-    # Limit resources to prevent the agent from crashing your host machine
+    env_file:
+      - .env.sandbox
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DEBUG=1
     deploy:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
-    # Standard ports aren't strictly needed for a sandbox unless it hosts a web server
+          memory: 1G
     ports:
       - "8080:8080"
+
+volumes:
+  postgres_data:
+
+
+

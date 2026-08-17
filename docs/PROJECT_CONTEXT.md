@@ -30,6 +30,8 @@ The project uses:
 * KinD for containerization
 
 # Architectural decisions
+* Source code for the project is located in the ./src/ folder
+* The project uses uv for python environment and package management
 * API endpoints should confirm to REST specification
 * API communication is handled using Django Rest Framework
 * All code is linted using ruff
@@ -50,7 +52,27 @@ The project uses:
 * Use a modularized approach and decompose to a suitable level of abstraction whenever possible
 * All functions have clear, but concise documentation
 * Type hinting is enforced using pydantic, and data correspondence is checked using pydantic
+* All created code is tested for validation in a sandbox environment, that can be created using the './docker-compose.yml' file
+* If the sandbox environment is not sufficient for a test run, agents do not directly adapt it in './docker-compose.yml' or otherwise, the user is always prompted to change any configurations or parameters for the sandbox environment.
+* Any images used in the webshop are stored in a folder structure that is date-sensitive when they are loaded for the first time
+* Grafana's open source monitoring / observability tool is used for performance monitoring, and performance metrics, logs and traces are collected following OpenTelemetry standards
 
 # Context mapping
 Use the following files for context on the following topics:
-* './workspace' is a shared directory that is mounted in the sandbox environment once that is created by running a container with docker-compose.yml 
+* './docker-compose.yml and './.Dockerfile' create a docker sandbox environment that agents can use to validate code changes
+* './src' contains all source code needed to build the webshop django app as a containerized service
+* './docs/PROJECT_CONTEXT.md' is the current file, it contains an overview of the project context that agents can use to get an idea of the project goal, tech stack, architectural decisions and files
+* './docs/coding_standards.md' contains coding standards all code in the project should adhere to where relevant
+* './docs/database_schema.md' provides an overview of the structure and contents of the postgres backend used for this project
+* './src/core/' contains project level components of the python Django framework for the webshop.
+* './src/orders/', './src/products/' and './src/users/' contain app-level components of the python Django framework for the webshop
+* './src/media/' contains all media (e.g. image files) for use in the webshop
+* './src/templates/' and './src/static' contains all html templates and static files for the frontend of the webshop
+* './tests/' contains all playwright tests for the webshop
+* './src/theme/' contains all css and tailwind files necessary for styling the webshop
+* './scripts' contains all one-of migration or data scripts for the project
+* './agents' contains all configuration related information for agents working on this project. This information is intended purely as instruction for agents. This folder should not normally be operated on directly by agents
+* './.venv/', './.continue/' and './.github/' contain logic related to the operation of development stack middleware. These folders should not normally be operated on by agents directly
+* './src/api/' contains the interface by which agents can act upon webshop logic. Logic in this folder can be operated upon by agents occasionally, but is not part of the webshop functionality
+* './src/entrypoint.sh' contains the entrypoint logic for provisioning the app inside a containerized environment
+* './Modelfile' contains a mapping to enable Gemma 4 tool calling. This file should never be changed or removed
