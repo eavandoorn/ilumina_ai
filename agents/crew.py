@@ -2,6 +2,7 @@ from crewai import Crew, Process
 from .tasks import setup_postgres
 from .agents import architect, db_engineer, backend_dev, frontend_dev, sre_engineer
 
+
 # The Crew brings them together
 web_shop_crew = Crew(
     agents=[architect, db_engineer, backend_dev, frontend_dev, sre_engineer],

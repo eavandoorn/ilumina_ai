@@ -59,7 +59,10 @@ setup_sandbox=Task(
 
 # Set up Postgres
 setup_postgres=Task(
-    description="""Read postgres related settings in .env, .env.sandbox, ./.my_pgpass, ./.pg_service.conf, ./src/entrypoint.sh, and other files 
+    description="""
+    Create a new branch 'db_setup' in git
+    
+    Read postgres related settings in .env, .env.sandbox, ./.my_pgpass, ./.pg_service.conf, ./src/entrypoint.sh, and other files 
     in (sub)folders of ./src/ that are relevant to setting up a database for use with django. Also read the ./docs/database_schema.md. 
 
     Set up a postgres environment that is consistent between the local machine and the containerized implementation. For the local environment, 
@@ -80,12 +83,14 @@ setup_postgres=Task(
         * Use playwright for writing and running the tests
     * Run the tests and verify they are completed successfully
     * Validate there are no remaining inconsistencies in any files that were edited in configuring and running the database
-    * Create a pull request for the changes named 'backend-postgres-setup'
+    * Update ./.gitignore by appending any newly created files or folders that should not be versioned, then add all changes in git, then commit the added changes to the 'db_setup' branch
+    * Create a pull request for the changes in the 'db_setup' branch, named 'backend-postgres-setup'
 
     CRITICAL: 
         This task is done once all of the above steps are completed. If one of more steps fail, report these back with detailed information on what went wrong, and how to troubleshoot
         Leave local machine RBAC configuration as-is, and do not make any changes to it. If this prevents successful completion of your task, fail the task and report back the reason.
         Prefer database user 'storesys' for all operations, but make sure to replicate all existing RBAC information from the current local database setup
+        Please ensure success on file writes: if output states a file is created or a step completes where files are created (for example creating tests), ensure the file is created. If a file write cannot be validated, fail the task and report the reasons for doing so in the output.
     """,
     expected_output="A pair of postgres databases (local machine and sandbox) that are copies of one another using the same postgres version, RBAC definitions and data model, with all related code consistent, tested and complete.",
     agent=backend_dev

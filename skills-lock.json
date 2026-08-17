@@ -187,6 +187,12 @@
       "skillPath": "skills/brand-voice/SKILL.md",
       "computedHash": "d2a2d29814a36bb98e4e9f2ef6dc724e2152e935f3d32019f3e2e554ff91ddef"
     },
+    "browser-act": {
+      "source": "browser-act/skills",
+      "sourceType": "github",
+      "skillPath": "browser-act/SKILL.md",
+      "computedHash": "3e3edc42bc0c7328ea3ecb91b16561f87c917e823de5a86a91fc1cfbf342d43d"
+    },
     "browser-qa": {
       "source": "affaan-m/ecc",
       "sourceType": "github",
