@@ -57,17 +57,33 @@ setup_sandbox=Task(
     agent=backend_dev
 )
 
+# Testing task
+test_tooling=Task(
+        description="""
+        CRITICAL: You are a helpful agent with access to tools. When a tool is mentioned, or could help complete the task, use the tool. Do not assume you are a model that should just generate output, but instead apply tools to achieve effects in the codebase.
+
+        Create a directory './_tool_test/'. Inside the directory, create a file 'tools.md' and use bash to append the contents of files in ./.continue/skills/ to its contents.
+        """,
+        expected_output="A file './_tool_test/tools.md' containing concatenated tooling definitions from files in './.continue/skills/'",
+        agent=backend_dev
+)
+
+
 # Set up Postgres
 setup_postgres=Task(
     description="""
+    CRITICAL: When executing this prompt, use tool calling for each step where possible. Print which tool is being used when it is being accessed. If a tool call does not complete, fail this task.
+    
     Create a new branch 'db_setup' in git
     
     Read postgres related settings in .env, .env.sandbox, ./.my_pgpass, ./.pg_service.conf, ./src/entrypoint.sh, and other files 
     in (sub)folders of ./src/ that are relevant to setting up a database for use with django. Also read the ./docs/database_schema.md. 
 
+    When invoking tools, please specify the invocation path by printing the file or database connection and the tool name(s) used.
+
     Set up a postgres environment that is consistent between the local machine and the containerized implementation. For the local environment, 
     use the existing postgres installation in /opt/homebrew/bin/postgres. Take the following steps:
-    * Adapt ./docker-compose.yml and ./Dockerfile to include the correct postgres version in the backend container
+    * Adapt ./docker-compose.yml and ./Dockerfile to include the correct postgres version in the backend container. CRITICAL: Ensure all other versions (e.g. python) remain what they currently are.
     * Use the existing credentials for the local machine postgres and change the data model on the local machine to match the model described in ./docs/database_schema.md
     * Adapt ./docker-compose.yml and ./Dockerfile to replicate the database on the local machine in the sandbox:
         * Extract RBAC-related configuration from the database on the local machine and add it to ./docker-compose.yml and ./Dockerfile securely
