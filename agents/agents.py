@@ -1,11 +1,18 @@
 from crewai import Agent, LLM
-from .tools import edit_file, query_database_schema, validate_schema_logic, output_to_new_file, read_file_contents, run_cli_command
+from .tools import edit_file, query_database_schema, validate_schema_logic, output_to_new_file, read_file_contents, run_cli_command, get_skills
 
 llm = LLM(
     model='ollama/gemma4-tools:custom',
     base_url="http://localhost:11434/v1",
     api_key='ollama'
     )
+
+common_tools=[
+    get_skills, 
+    edit_file, 
+    read_file_contents, 
+    run_cli_command
+]
 
 # 0. The Product Manager
 # Creates features and work items, prioritizes them, and signs off on delivered results
@@ -22,7 +29,8 @@ pm = Agent(
     verbose=True,
     system_template="""You are an expert. When you need information about specific coding patterns, 
     you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools."""
+    Do not provide conversational filler when calling tools.""",
+    tools=common_tools
 )
 
 
@@ -43,7 +51,8 @@ conform to REST specifications.
     verbose=True,
     system_template="""You are an expert. When you need information about specific coding patterns, 
     you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools."""
+    Do not provide conversational filler when calling tools.""",
+    tools=common_tools
     )
 
 # 2. The Database & Schema Engineer
@@ -62,7 +71,8 @@ db_engineer = Agent(
     verbose=True,
     system_template="""You are an expert. When you need information about specific coding patterns, 
     you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools."""
+    Do not provide conversational filler when calling tools.""",
+    tools=common_tools
     )
 
 # 3. The Backend Developer
@@ -82,7 +92,8 @@ backend_dev = Agent(
     verbose=True,
     system_template="""You are an expert. When you need information about specific coding patterns, 
     you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools."""
+    Do not provide conversational filler when calling tools.""",
+    tools=common_tools
     )
 
 # 4. The Frontend & UI Engineer
@@ -102,7 +113,8 @@ frontend_dev = Agent(
     verbose=True,
     system_template="""You are an expert. When you need information about specific coding patterns, 
     you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools."""
+    Do not provide conversational filler when calling tools.""",
+    tools=common_tools
     )
 
 # 5. The Site Reliability Engineer (SRE)
@@ -122,6 +134,7 @@ sre_engineer = Agent(
     verbose=True,
     system_template="""You are an expert. When you need information about specific coding patterns, 
     you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools."""
+    Do not provide conversational filler when calling tools.""",
+    tools=common_tools
 )
 

@@ -1,8 +1,25 @@
 
 from crewai.tools import tool
+from src.tools_integration.skill_manager import SkillManager # Import the manager
 import subprocess
 import os
 from typing import List
+
+# Instantiate the manager once at the module level
+skill_manager = SkillManager(endpoint="http://localhost:8080")
+
+@tool("get_skills")
+def get_skills(query: str) -> str:
+    """
+    Use this tool to fetch technical instructions and coding patterns from the 
+    internal vector database. Input should be a short query like 'react' or 'python'.
+    
+    Use this whenever you need to know 'how' to implement a specific feature, 
+    follow a specific pattern, or adhere to the project's coding standards.
+    """
+    # This calls the logic from your skill_manager.py
+    return skill_manager.get_skills(query)
+
 
 # --- TOOLS FOR ARCHITECT & DB ENGINEER ---
 # These tools help in planning and ensuring schema integrity before coding begins.

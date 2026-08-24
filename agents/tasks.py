@@ -60,19 +60,50 @@ setup_sandbox=Task(
 # Testing task
 test_tooling=Task(
         description="""
-        CRITICAL: You are a helpful agent with access to tools. When a tool is mentioned, or could help complete the task, use the tool. Do not assume you are a model that should just generate output, but instead apply tools to achieve effects in the codebase.
+        CRITICAL: You are a helpful agent with access to tools. When you need to know how something is done, first examine your common_tools. If they 
+         do not fit your purpose, use the 'get_skills' tool to query the tooling knowledge base and find tools related to the topic. 
+         Once you retrieve one or more tools, check for the best fit based on semantic content of the description, and use the one that fits best. 
+         Do not assume you are a model that should just generate output, but instead apply tools to achieve effects in the codebase.
 
-        Create a directory './_tool_test/'. Inside the directory, create a file 'tools.md' and use bash to append the contents of files in ./.continue/skills/ to its contents.
+        Get the 'django-patterns' tool using the 'get_skills' tool. Then, use 'djago-patterns' to provide a review of the codebase of the current project, noting any discrepancies of the current code to best practices.
         """,
-        expected_output="A file './_tool_test/tools.md' containing concatenated tooling definitions from files in './.continue/skills/'",
+        expected_output="A file './_tool_test/tools.md' containing concatenated tooling definitions from files in './.continue/_no_use/'",
         agent=backend_dev
 )
 
 
-# Set up Postgres
+# Test get_skills
+test_get_skills=Task(
+    description="""
+    Use the 'get_skills' tool to retrieve a tool for 'accessibility' from the tooling database. 
+    
+    CRITICAL: When executing this prompt:
+    * NEVER retrieve the tool using anything except the 'get_skills' tool that is accessible to you from ./agents/tools.py
+    * Print a confirmation to output if the tool was retrieved
+    * Print the full content of the retrieved tool to output, never truncate or skip content that is contained in the retrieved tool
+    
+    """,
+    expected_output="Printed confirmations to output if a tool is successfully retrieved.",
+    agent=backend_dev
+)
+
+
+
+# # Task for the Developer
+# coding_task = Task(
+#     description="""Write the Django models and Serializers based on the 
+#     architecture provided by the Architect. Ensure all fields are validated. 
+
+#     Use the 'edit_file' tool to add the resulting code to the correct models.py and serializers.py files
+#     for each app where they need to be added.
+#     """,
+#     expected_output="A set of Python files (models.py, serializers.py) ready for implementation.",
+#     agent=backend_dev
+# )
+
 setup_postgres=Task(
     description="""
-    CRITICAL: When executing this prompt, use tool calling for each step where possible. Print which tool is being used when it is being accessed. If a tool call does not complete, fail this task.
+    CRITICAL: When executing this prompt, use tool calling for each step where possible. Use the 'get_skills' tool to query the skills database for tools you may need, and from the response select the tool(s) best fitting what you are trying to do. Print which tool is being used when it is being accessed. If a tool call does not complete, fail this task.
     
     Create a new branch 'db_setup' in git
     
@@ -111,17 +142,3 @@ setup_postgres=Task(
     expected_output="A pair of postgres databases (local machine and sandbox) that are copies of one another using the same postgres version, RBAC definitions and data model, with all related code consistent, tested and complete.",
     agent=backend_dev
 )
-
-
-
-# # Task for the Developer
-# coding_task = Task(
-#     description="""Write the Django models and Serializers based on the 
-#     architecture provided by the Architect. Ensure all fields are validated. 
-
-#     Use the 'edit_file' tool to add the resulting code to the correct models.py and serializers.py files
-#     for each app where they need to be added.
-#     """,
-#     expected_output="A set of Python files (models.py, serializers.py) ready for implementation.",
-#     agent=backend_dev
-# )
