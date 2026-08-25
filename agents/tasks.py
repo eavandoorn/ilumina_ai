@@ -1,5 +1,5 @@
 from crewai import Task
-from .agents import pm, architect, backend_dev #, frontend_dev, db_engineer, sre_engineer
+from .agents import pm, architect, backend_dev, db_engineer #, frontend_dev, db_engineer, sre_engineer
 
 # Create Implementation Plan
 planning_task = Task(
@@ -87,23 +87,11 @@ test_get_skills=Task(
     agent=backend_dev
 )
 
-
-
-# # Task for the Developer
-# coding_task = Task(
-#     description="""Write the Django models and Serializers based on the 
-#     architecture provided by the Architect. Ensure all fields are validated. 
-
-#     Use the 'edit_file' tool to add the resulting code to the correct models.py and serializers.py files
-#     for each app where they need to be added.
-#     """,
-#     expected_output="A set of Python files (models.py, serializers.py) ready for implementation.",
-#     agent=backend_dev
-# )
-
 setup_postgres=Task(
     description="""
-    CRITICAL: When executing this prompt, use tool calling for each step where possible. Use the 'get_skills' tool to query the skills database for tools you may need, and from the response select the tool(s) best fitting what you are trying to do. Print which tool is being used when it is being accessed. If a tool call does not complete, fail this task.
+    CRITICAL: When executing this prompt, before doing anything else, use the 'get_skills' tool to query the skills database for 'postgres' skills, and from the response 
+    select the tool(s) best fitting what you are trying to do as you start completion of the task. If you need different tools later, query using the 'get_skills' tool, and 
+    retrieve other tools you may need. Print which tool is being used when it is being accessed. If a tool call does not complete, fail this task.
     
     Create a new branch 'db_setup' in git
     
@@ -141,4 +129,34 @@ setup_postgres=Task(
     """,
     expected_output="A pair of postgres databases (local machine and sandbox) that are copies of one another using the same postgres version, RBAC definitions and data model, with all related code consistent, tested and complete.",
     agent=backend_dev
+)
+
+# Task for the Developer
+initial_db_migrations = Task(
+    description="""
+    Create a git branch 'db_migrations' and check it out
+
+    Get postgres-related skill from skill database using get_skill. Then, write the Django models 
+    and Serializers based on './docs/database_schema.md'. Ensure all fields are validated. Update models.py files for
+    all apps in the project where needed. 
+
+    Make the changes necessary to propagate these database model changes using './src/manage.py makemigrations' 
+    and './src/manage.py migrate', for both the local environment and the sandbox. Write unit tests where needed.  
+    
+    Run the code in the sandbox environment, validate that it results in a migration file as well as the necessary changes
+    in the backend (i.e. verify in postgres that the changes have successfully been applied). Also verify that any
+    unit tests are successfully completed. 
+    
+    Finally, update './docs/implementation_progress.md':
+        * Copy over the high-level steps from './docs/implementation_plan.md'
+        * Under the step that mentions database migration (second step of infrastructure setup) add a summary of this task
+        * Add code changes to git, and use the summary as the commit message, commit changes to git, and create a pull request 
+        to merge db_migrations into main. 
+    
+    This task completes when all steps above have completed. If any of the steps fail, the task also fails. If that happens, 
+    print a clear diagnosis for the failure to output.
+    
+    """,
+    expected_output="A set of Python files (models.py, serializers.py) ready for implementation, with unit tests, validation in sandbox, and clear annotation in ./docs/implementation_progress.md and a git commit message.",
+    agent=db_engineer
 )
