@@ -1,6 +1,17 @@
 from crewai import Agent, LLM
 from .tools import edit_file, query_database_schema, validate_schema_logic, output_to_new_file, read_file_contents, run_cli_command, get_skills
 
+sysprompt="""
+You are a skilled, helpful agent that has a clear role in a software development team. 
+
+When you are assigned a task, read './.agents/skill_index.yml. This contains pairs of <tool name: description>.
+If there are any tools in this file that seem useful for your task, use the 'get_skills' tool to query the skills database for the full tool description.
+Do not provide conversational filler when calling tools.
+
+CRITICAL: When doing so, print a notification with the explicit query to output. Also, the database will return the 5 best matching tools for your 
+query, select the best fitting one or several. 
+"""
+
 llm = LLM(
     model='ollama/gemma4-tools:custom',
     base_url="http://localhost:11434/v1",
@@ -27,9 +38,7 @@ pm = Agent(
     llm=llm,
     allow_delegation=False,
     verbose=True,
-    system_template="""You are an expert. When you need information about specific coding patterns, 
-    you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools.""",
+    system_template=sysprompt,
     tools=common_tools
 )
 
@@ -49,9 +58,7 @@ conform to REST specifications.
     llm=llm,
     allow_delegation=False,
     verbose=True,
-    system_template="""You are an expert. When you need information about specific coding patterns, 
-    you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools.""",
+    system_template=sysprompt,
     tools=common_tools
     )
 
@@ -69,9 +76,7 @@ db_engineer = Agent(
     llm=llm,
     allow_delegation=False,
     verbose=True,
-    system_template="""You are an expert. When you need information about specific coding patterns, 
-    you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools.""",
+    system_template=sysprompt,
     tools=common_tools
     )
 
@@ -90,9 +95,7 @@ backend_dev = Agent(
     llm=llm,
     allow_delegation=False,
     verbose=True,
-    system_template="""You are an expert. When you need information about specific coding patterns, 
-    you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools.""",
+    system_template=sysprompt,
     tools=common_tools
     )
 
@@ -111,9 +114,7 @@ frontend_dev = Agent(
     llm=llm,
     allow_delegation=False,
     verbose=True,
-    system_template="""You are an expert. When you need information about specific coding patterns, 
-    you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools.""",
+    system_template=sysprompt,
     tools=common_tools
     )
 
@@ -132,9 +133,7 @@ sre_engineer = Agent(
     llm=llm,
     allow_delegation=False,
     verbose=True,
-    system_template="""You are an expert. When you need information about specific coding patterns, 
-    you MUST output a structured request to the 'get_skills' tool. 
-    Do not provide conversational filler when calling tools.""",
+    system_template=sysprompt,
     tools=common_tools
 )
 
