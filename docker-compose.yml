@@ -4,8 +4,8 @@ services:
     container_name: code_sandbox_db
     environment:
       POSTGRES_DB: ${DATABASE_NAME:-ilumina_db}
-      POSTGRES_USER: ${DATABASE_USER:-postgres}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_USER: ${DATABASE_USER:-storesys}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-password}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
