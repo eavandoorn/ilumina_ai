@@ -134,29 +134,30 @@ setup_postgres=Task(
 # Task for the Developer
 initial_db_migrations = Task(
     description="""
-    Create a git branch 'db_migrations' and check it out
+    Create a git branch 'db_migrations' and check it out. Push it to the remote server with git push -u origin db_migrations.
 
-    Get postgres-related skill from skill database using get_skill. Then, write the Django models 
-    and Serializers based on './docs/database_schema.md'. Ensure all fields are validated. Update models.py files for
-    all apps in the project where needed. 
+    Get postgres-related skill from skill database using get_skill. Then, update the project files with Django models 
+    and Serializers in the project directory based on './docs/database_schema.md'. Ensure all fields are validated. 
+    Update models.py files for all apps in the project where needed. 
 
-    Make the changes necessary to propagate these database model changes using './src/manage.py makemigrations' 
-    and './src/manage.py migrate', for both the local environment and the sandbox. Write unit tests where needed.  
+    Ensure changes in the models can be propagated to the backend using './src/manage.py makemigrations' 
+    and './src/manage.py migrate'. Write unit tests where needed.
     
-    Run the code in the sandbox environment, validate that it results in a migration file as well as the necessary changes
-    in the backend (i.e. verify in postgres that the changes have successfully been applied). Also verify that any
-    unit tests are successfully completed. 
+    Start or restart the sandbox environment as needed so that the code changes propagate. Run the code in the sandbox environment, validate that it results in a migration file as well as the necessary changes
+    in the backend (i.e. verify in postgres that the changes have successfully been applied). 
+    
+    Run the test suite locally (not in sandbox) and verify that any new and existing unit tests are successfully completed. 
     
     Finally, update './docs/implementation_progress.md':
         * Copy over the high-level steps from './docs/implementation_plan.md'
         * Under the step that mentions database migration (second step of infrastructure setup) add a summary of this task
-        * Add code changes to git, and use the summary as the commit message, commit changes to git, and create a pull request 
+        * Add code changes to git, and use the summary as the commit message, commit changes to git, push the changes to remote, and create a pull request 
         to merge db_migrations into main. 
     
     This task completes when all steps above have completed. If any of the steps fail, the task also fails. If that happens, 
     print a clear diagnosis for the failure to output.
     
     """,
-    expected_output="A set of Python files (models.py, serializers.py) ready for implementation, with unit tests, validation in sandbox, and clear annotation in ./docs/implementation_progress.md and a git commit message.",
+    expected_output="A set of edited Python files (models.py, serializers.py) for which the code matches ./docs/database_schema, ready for implementation, with unit tests, validation in sandbox, and clear annotation in ./docs/implementation_progress.md and a git commit message. Pull request created.",
     agent=db_engineer
 )
