@@ -727,6 +727,12 @@
       "skillPath": "skills/google-workspace-ops/SKILL.md",
       "computedHash": "b1b317fdee45543857bd26354b85b5c516d643e4e3a4fdda95a64f25fca04f54"
     },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "9cdbb4b8f7a3aeaef82e6230c9e823500d4a8a1214c726cf342cf9829d34fc7d"
+    },
     "growth-log": {
       "source": "affaan-m/ecc",
       "sourceType": "github",

@@ -161,3 +161,30 @@ initial_db_migrations = Task(
     expected_output="A set of edited Python files (models.py, serializers.py) for which the code matches ./docs/database_schema, ready for implementation, with unit tests, validation in sandbox, and clear annotation in ./docs/implementation_progress.md and a git commit message. Pull request created.",
     agent=db_engineer
 )
+
+product_catalog_services_task = Task(
+description="""Create a branch 'product_catalog' and check it out.  Push it to the remote server with git push -u origin db_migrations.
+CRITICAL: When executing this task, if at any time you would generate text in place of using a tool (for example when the tool is not available), use the 'get_skill' tool instead to query the skill database for any tools that could be used and use an appropriate one. 
+
+Implement the Product and Catalog Services as part of the Service Layer.
+The goal is to move logic out of the views and into a dedicated service layer while ensuring strict type safety and validation.
+
+Detailed Implementation Plan:
+1. Schema Definition: Create `apps/products/schemas.py` using Pydantic to define the contract for product creation, updates, and variant management.
+2. Image Processing & Storage: Implement logic in `apps/products/services.py` or a utility module to enforce the .png requirement, handle Pillow-based compression, and manage file paths in the media directory.
+3. Core Service Logic: Implement `apps/products/services.py` with the following methods:
+    - `create_product_listing()`: Handles atomic creation of products and their variants.
+    - `get_catalog_data()`: Provides optimized data for the front-end.
+    - `update_stock_level()`: Manages inventory updates.
+4. Error Handling & Logging: Implement a custom exception layer in `apps/products/exceptions.py` and ensure all service actions are logged.
+
+Ensure changes in the models can be propagated to the backend using an appropriate function call from django. Write unit tests where planned.
+Start or restart the sandbox environment as needed so that the code changes propagate. Run the code in the sandbox environment, validate that the created services work.
+Run the test suite locally (not in sandbox) and verify that any new and existing unit tests are successfully completed. 
+Finally, update './docs/implementation_progress.md':
+* Under the step that mentions service implementation add a two line summary of this task
+* Add code changes to git, and use the summary as the commit message, commit changes to git, push the changes with 'git push origin product_catalog_services', and create a pull request on the remote to merge product_catalog_services into main. 
+This task completes when all steps above have completed. If any of the steps fail, the task also fails. If that happens, print a clear diagnosis for the failure to output.""",
+expected_output="product services created, validated and tested, changes on git branch with pull request, progress tracking updated",
+agent=backend_dev
+)
